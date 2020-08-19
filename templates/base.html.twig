@@ -3,10 +3,25 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
+
+        <!-- Permet les media-queries pour mobile ! user-scalable=no interdit zomm et dezoom -->
+        <meta name="viewport" content="width=device-width, user-scalable=no">
+
+        <link rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/css/custom.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" /> <!-- FontAwesome -->
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        {% include "/common/header.html.twig" %}
+
         {% block body %}{% endblock %}
+
+        {% include "/common/footer.html.twig" %}
+
+        <script src="/js/jquery.js"></script>
+        <script src="/js/popper.js"></script>
+        <script src="/js/bootstrap.js"></script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
