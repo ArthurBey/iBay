@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields={"email"}, message="Cet e-mail est déjà utilisé par un membre.")
  */
 class User implements UserInterface
 {
@@ -91,6 +95,11 @@ class User implements UserInterface
      */
     private $receivedMessages;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $profilePicture;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -99,6 +108,24 @@ class User implements UserInterface
         $this->accountRoles = new ArrayCollection();
         $this->sentMessages = new ArrayCollection();
         $this->receivedMessages = new ArrayCollection();
+    }
+
+    /**
+     * Permet de générer le slug avant un 'persist' ou un 'update' de l'entité
+     * On utilise un lifecycle callback de l'ORM (Doctrine) 
+     * Documentation  de slugify cf: cocur-slugify
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function slugify() 
+    {
+        if(empty($this->slug)){
+            $slugify = new Slugify();
+            $this->slug = $slugify->slugify($this->firstName . ' ' . $this->lastName);
+        }
     }
 
     public function getId(): ?int
@@ -133,9 +160,12 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles = $this->accountRoles->map(function($role){ /* Avant de transformer en tableau, on utilise map pour transformer les éléments : 
+            elle va boucler sur chaque entité role et les transformer / map() prend UNE FONCTION en arg */
+            return $role->getTitle(); // map ne retournera donc que ce résultat pour la nouvelle collection
+        })->toArray(); // Pour transformer la collection en tableau php simple
+
+        $roles[] = 'ROLE_USER'; // Tout le monde est user par défaut, non stocké en bdd
 
         return array_unique($roles);
     }
@@ -416,6 +446,18 @@ class User implements UserInterface
                 $receivedMessage->setReceiver(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?string $profilePicture): self
+    {
+        $this->profilePicture = $profilePicture;
 
         return $this;
     }

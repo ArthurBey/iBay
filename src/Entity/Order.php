@@ -26,11 +26,6 @@ class Order
     private $created_at;
 
     /**
-     * @ORM\Column(type="float")
-     */
-    private $total;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $shippingAddress;
@@ -80,18 +75,6 @@ class Order
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getTotal(): ?float
-    {
-        return $this->total;
-    }
-
-    public function setTotal(float $total): self
-    {
-        $this->total = $total;
 
         return $this;
     }

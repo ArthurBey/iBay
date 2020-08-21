@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Product
 {
@@ -96,6 +98,24 @@ class Product
         $this->reviews = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->orderLines = new ArrayCollection();
+    }
+
+    /**
+     * Permet de générer le slug avant un 'persist' ou un 'update' de l'entité
+     * On utilise un lifecycle callback de l'ORM (Doctrine) 
+     * Documentation  de slugify cf: cocur-slugify
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function slugify() 
+    {
+        if(empty($this->slug)){
+            $slugify = new Slugify();
+            $this->slug = $slugify->slugify($this->title);
+        }
     }
 
     public function getId(): ?int

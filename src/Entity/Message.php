@@ -18,10 +18,10 @@ class Message
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Message::class, cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Message::class)
      */
     private $thread;
-
+    
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -49,21 +49,11 @@ class Message
      */
     private $receiver;
 
+    
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getThread(): ?self
-    {
-        return $this->thread;
-    }
-
-    public function setThread(?self $thread): self
-    {
-        $this->thread = $thread;
-
-        return $this;
     }
 
     public function getTitle(): ?string
@@ -122,6 +112,18 @@ class Message
     public function setReceiver(?User $receiver): self
     {
         $this->receiver = $receiver;
+
+        return $this;
+    }
+
+    public function getThread(): ?self
+    {
+        return $this->thread;
+    }
+
+    public function setThread(?self $thread): self
+    {
+        $this->thread = $thread;
 
         return $this;
     }
