@@ -1,0 +1,85 @@
+.col-lg-3 {
+    min-width: 320px;
+    max-width: 380px;
+}
+
+.container {
+    max-width: 70%;
+}
+
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    color: white;
+}
+
+.card-header-bg {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.card-img {
+    height: 200px; width: 100%; display: block;
+}
+
+h3 > a.card-link {
+    color: white;
+}
+
+i.fa-star {
+    color: goldenrod;
+}
+
+.cat0 {
+    background: firebrick;
+}
+
+.cat1 {
+    background: darkCyan;
+}
+.cat2 {
+    background: aqua;
+}
+
+.cat3 {
+    background: blueviolet;
+}
+
+.cat4 {
+    background: blue;
+}
+
+.cat5 {
+    background: darkgreen;
+}
+
+.cat6 {
+    background: goldenrod;
+}
+
+.cat7 {
+    background: deepskyblue;
+}
+
+.cat8 {
+    background: mediumspringgreen;
+}
+
+.cat9 {
+    background: tomato;
+}
+
+@media only screen and (max-width: 990px) {
+    .container {
+        max-width: 100%;
+    }
+    .col-lg-3 {
+        max-width: 500px; /* Annule le max-width: 380px du css de base */
+        margin: auto; /* Positionement au centre */
+    }
+  }
+

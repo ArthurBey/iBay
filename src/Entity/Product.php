@@ -24,6 +24,11 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $title;
 
     /**
@@ -67,7 +72,7 @@ class Product
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="Product", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="product", orphanRemoval=true)
      */
     private $reviews;
 
@@ -78,7 +83,7 @@ class Product
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="Product")
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="product")
      */
     private $images;
 
@@ -92,6 +97,12 @@ class Product
      * @ORM\OneToMany(targetEntity=OrderLine::class, mappedBy="product")
      */
     private $orderLines;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Condition::class, inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $productCondition;
 
     public function __construct()
     {
@@ -346,5 +357,51 @@ class Product
         }
 
         return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getProductCondition(): ?Condition
+    {
+        return $this->productCondition;
+    }
+
+    public function setProductCondition(?Condition $productCondition): self
+    {
+        $this->productCondition = $productCondition;
+
+        return $this;
+    }
+
+    /**
+     * Retourne la note moyenne d'un produit
+     *
+     * @return float
+     */
+    public function getAverageRating()
+    {
+        /* $sum = array_reduce($this->reviews->toArray(), function($total, $review){ // array_reduce() -> chaque elements vers fonction callback, but: retourner une seule valeure
+            return $total + $review->getRating();
+        }, 0); */
+        $sum = 0;
+        $reviewsArray = $this->reviews->toArray();
+        foreach($reviewsArray as $review ) {
+            $sum += $review->getRating();
+        }
+
+        if(count($this->reviews) > 0) {
+            return $sum / count($this->reviews);
+        }
+        return 0;
     }
 }

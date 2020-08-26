@@ -25,7 +25,7 @@ class Status
     private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="Status")
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="status")
      */
     private $orders;
 

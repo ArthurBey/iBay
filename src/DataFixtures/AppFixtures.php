@@ -12,6 +12,7 @@ use App\Entity\Status;
 use App\Entity\Message;
 use App\Entity\Product;
 use App\Entity\Category;
+use App\Entity\Condition;
 use App\Entity\OrderLine;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -46,14 +47,16 @@ class AppFixtures extends Fixture
                      // ATTENTION : Pour que le encodePassword() fonctionne pour l'utilisateur passé en 1er arg. Il faut que l'ENCODER de cet User soit définis dans security.yaml !
                      ->setPassword($this->passwordEncoder->encodePassword($adminAccount, 'AdminPassword123')) // le 1er arg : User : dans security.yaml son encoder y est defini
                      ->setDescription($paragraphs)
-                     ->setCreatedAt(new \DateTime());
+                     ->setCreatedAt(new \DateTime())
+                     ->setNickname('Arthur9800');
 
         $manager->persist($adminAccount);
 
         // Catégories d'articles
-        $categorieNames = ['Vetements', 'Automobile', 'Smartphones', 'Informatique', 'Meubles', 'Electromenagers', 'Bricolage', 'Jeux-videos', 'Consoles', 'Sport'];
+        $categoryNames = ['Vetements', 'Automobile', 'Smartphones', 'Informatique', 'Meubles', 'Electromenagers', 'Bricolage', 'Jeux-videos', 'Consoles', 'Sport'];
+        $categoryEnglishNames = ['clothing', 'car', 'cellphone', 'computers', 'furniture', 'appliances', 'tools', 'games', 'ps4', 'olympic'];
         $categories = [];
-        foreach($categorieNames as $categoryName) {
+        foreach($categoryNames as $categoryName) {
             $category = new Category();
             $category->setTitle($categoryName);
             $manager->persist($category);
@@ -72,6 +75,16 @@ class AppFixtures extends Fixture
             $statusArray[] = $status;
         }
 
+        $conditionNames = ['Occasion', 'Reconditioné', 'Neuf'];
+        $conditions = [];
+        foreach($conditionNames as $conditionName) {
+            $condition = new Condition();
+            $condition->setState($conditionName);
+
+            $manager->persist($condition);
+            $conditions[] = $condition;
+        }
+
         // Création d'utilisateurs
         $users = [];
         $genres = ['male', 'female'];
@@ -81,6 +94,7 @@ class AppFixtures extends Fixture
             $user = new User();
 
             $createdAt       = $faker->dateTimeBetween('- 12 months');
+            $username        = $faker->userName();
             $paragraphsArray = $faker->paragraphs(3);
             $paragraphs      = implode(' ', $paragraphsArray);
             $genre           = $faker->randomElement($genres);
@@ -96,23 +110,38 @@ class AppFixtures extends Fixture
                  ->setDescription($paragraphs)
                  ->setPassword($hash)
                  ->setProfilePicture($picture)
-                 ->setCreatedAt($createdAt);
+                 ->setCreatedAt($createdAt)
+                 ->setNickname($username);
                  // Le role sera par défaut [] en bdd mais tout le monde ROLE_USER cf: User.php
 
             $manager->persist($user);
             $users[] = $user;
 
             // Les produits/annonces
-            for($j = 1; $j <= mt_rand(1, 13); $j++) {
+            for($j = 1; $j <= mt_rand(6, 36); $j++) {
                 $product = new Product();
 
-                $months          = $createdAt->diff(new \DateTime())->format("%m");
-                $days            = $createdAt->diff(new \DateTime())->format("%d");
-                $createdAt       = $faker->dateTimeBetween("- $months months - $days days");
-                $paragraphsArray = $faker->paragraphs(3);
-                $paragraphs      = implode(' ', $paragraphsArray);
-                $category        = $categories[mt_rand(0, count($categories) -1)]; 
-                $categorySlug    = $category->getSlug();
+                $months           = $createdAt->diff(new \DateTime())->format("%m");
+                $days             = $createdAt->diff(new \DateTime())->format("%d");
+                $createdAt        = $faker->dateTimeBetween("- $months months - $days days");
+                $paragraphsArray  = $faker->paragraphs(3);
+                $paragraphs       = implode(' ', $paragraphsArray);
+                $category         = $categories[mt_rand(0, count($categories) -1)]; 
+                $categoryLink     = $category->getSlug();
+                $words            = $faker->words(mt_rand(1, 2));
+                $name             = implode(' ', $words);
+                $productCondition = $conditions[mt_rand(0, count($conditions) -1)];
+
+                foreach($categoryNames as $categoryName){ // Ici il s'agit de faire correspondre nom categ en FR au nom categ en anglais
+                    if($categoryLink == strtolower($categoryName)){ // strtolower pour faire correspondre au slug
+                        foreach($categoryEnglishNames as $categoryEnglishName) {
+                            if(array_search($categoryEnglishName, $categoryEnglishNames) == array_search($categoryName, $categoryNames)) {
+                                $categoryLink = $categoryEnglishName;
+                            }
+                        }
+                    }
+                }
+                
 
                 $product->setCreatedAt($createdAt)
                         ->setUser($user)
@@ -123,7 +152,9 @@ class AppFixtures extends Fixture
                         ->setStock(mt_rand(1, 15))
                         ->setDetails($paragraphs)
                         ->setAvailable(true)
-                        ->setCoverUrl("https://loremflickr.com/320/240/$categorySlug");
+                        ->setCoverUrl("https://loremflickr.com/320/240/$categoryLink")
+                        ->setName($name)
+                        ->setProductCondition($productCondition);
                 
                 $manager->persist($product);
                 $products[] = $product;
@@ -132,14 +163,14 @@ class AppFixtures extends Fixture
                 for($k = 1; $k <= mt_rand(2, 3); $k++) {
                     $image = new Image();
                     $image->setProduct($product)
-                          ->setLink("https://loremflickr.com/320/240/$categorySlug")
+                          ->setLink("https://loremflickr.com/320/240/$categoryLink")
                           ->setDescription($faker->sentence(5));
 
                     $manager->persist($image);
                 }
 
                 // Les commentaires sur les produits
-                if($i !== 1) { // La première itérations de $i ne pourra pas générer ni de review, ni de order.. Qu'un seul user
+                if($i > 3) { // Pour qu'il y ai un minimum de 3 utilisateurs générés. Donc tout les produits issu des 3 premières itérations d'user seront vides...
                    for($k = 1; $k <= mt_rand(0, 5); $k++) {
                     $review          = new Review();
 

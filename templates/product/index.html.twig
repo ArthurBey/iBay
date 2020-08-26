@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Articles en vente{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/css/product.index.css">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="row my-4">
+        {% for product in pagination.data %}
+        <div class="col-lg-3">
+          <div class="card mb-3 my-3">
+                <div class="card-header-bg {% include "/product/_theme.html.twig" %}"> 
+                  <h3 class="card-header"><a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug}) }}" class="card-link">{{ product.name }}</a></h3>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Vendu par <a href="" class="card-link">{{ product.user.nickname }}</a></h5>
+                  <h6 class="card-subtitle text-muted">dans la catégorie {{ product.category.title }}</h6>
+                </div>
+                    <a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug}) }}"><img class="card-img" src="{{ product.coverUrl }}" alt="Card image"></a>
+                <div class="card-body">
+                  <p class="card-text">{{ product.title }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">Prix unitaire : <strong>{{ product.price }} &euro;</strong></li>
+                  <li class="list-group-item">
+                      {% if product.averageRating == 0 %}
+                          <em class="text-secondary">Non noté</em>
+                          <i class="fas fa-comment-slash text-secondary"></i>
+                      {% else %}
+                          {% for i in 1..5 %}
+                              {% if i <= product.averageRating %}
+                                <i class="fas fa-star"></i>
+                              {% else %}
+                                <i class="far fa-star"></i>
+                              {% endif %}
+                              
+                          {% endfor %}
+                      {% endif %}
+                  </li> 
+                  <li class="list-group-item">
+                    <span class="badge badge-warning">{{ product.productCondition.state }}</span>
+                    <span class="badge badge-danger">{{ product.stock }} en vente</span>
+                  </li>
+                </ul>
+                <div class="card-body">
+                  <a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug}) }}" class="card-link">
+                    Détails
+                    <i class="fas fa-search-plus"></i>
+                  </a>
+                  <a href="#" class="card-link">
+                    Acheter
+                    <i class="fas fa-shopping-cart"></i>
+                  </a>
+                </div>
+                <div class="card-footer text-muted">
+                  Publié le {{ product.createdAt | date("d/m/Y") }}
+                </div>
+              </div>
+        </div>
+        {% endfor %} 
+        
+  </div>
+  
+  {{ pagination.display() }}
+
+</div>
+
+
+{% endblock %}

@@ -21,13 +21,16 @@
         <a class="nav-link" href="#">About</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Catégories</a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Separated link</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '2', 'page': '1'}) }}">Automobile</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '7', 'page': '1'}) }}">Bricolage</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '9', 'page': '1'}) }}">Consoles</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '4', 'page': '1'}) }}">Informatique</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '8', 'page': '1'}) }}">Jeux-videos</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '5', 'page': '1'}) }}">Meubles</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '10', 'page': '1'}) }}">Sport</a>
+          <a class="dropdown-item" href="{{ path('products_index', {'category': '3', 'page': '1'}) }}">Smartphones</a>
         </div>
       </li>
     </ul>

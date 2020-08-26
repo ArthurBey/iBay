@@ -9,11 +9,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\HasLifecycleCallbacks
  * @UniqueEntity(fields={"email"}, message="Cet e-mail est déjà utilisé par un membre.")
+ * @UniqueEntity(fields={"nickname"}, message="Ce nom d'utilisateur est déjà utilisé.")
  */
 class User implements UserInterface
 {
@@ -26,6 +28,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Email(message="E-mail non valide !")
      */
     private $email;
 
@@ -42,16 +45,20 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * constraints cf: RegistrationFormType
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Champ obligatoire !")
+     * @Assert\Length(min=2, minMessage="2 charactères minimum")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min=30, minMessage="Décrivez-vous en quelques mots")
      */
     private $description;
 
@@ -66,17 +73,17 @@ class User implements UserInterface
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="User")
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="user")
      */
     private $reviews;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="User")
+     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="user")
      */
     private $products;
 
     /**
-     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="User")
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="user")
      */
     private $orders;
 
@@ -99,6 +106,11 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $profilePicture;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nickname;
 
     public function __construct()
     {
@@ -458,6 +470,18 @@ class User implements UserInterface
     public function setProfilePicture(?string $profilePicture): self
     {
         $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(string $nickname): self
+    {
+        $this->nickname = $nickname;
 
         return $this;
     }
