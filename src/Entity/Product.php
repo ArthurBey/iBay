@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -23,11 +24,21 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *      min=2, 
+     *      max=20, 
+     *      minMessage="Minimum 2 charactères", 
+     *      maxMessage="Maximum 20 charactères")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(
+     *      min=15, 
+     *      max=50, 
+     *      minMessage="Minimum 15 charactères", 
+     *      maxMessage="Maximum 50 charactères")
      */
     private $title;
 
@@ -38,21 +49,41 @@ class Product
 
     /**
      * @ORM\Column(type="float")
+     *  @Assert\Range(
+     *      min = 0.1,
+     *      max = 1000000,
+     *      notInRangeMessage = "Cette valeur est invalide",
+     * )
      */
     private $price;
 
     /**
      * @ORM\Column(type="float")
+     *  @Assert\Range(
+     *      min = 0,
+     *      max = 1000000,
+     *      notInRangeMessage = "Cette valeur est invalide",
+     * )
      */
     private $shippingCost;
 
     /**
      * @ORM\Column(type="integer")
+     *  @Assert\Range(
+     *      min = 1,
+     *      max = 1000,
+     *      notInRangeMessage = "Cette valeur est invalide",
+     * )
      */
     private $stock;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(
+     *      min=120, 
+     *      max=1000, 
+     *      minMessage="Minimum 120 charactères", 
+     *      maxMessage="Maximum 1000 charactères")
      */
     private $details;
 

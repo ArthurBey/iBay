@@ -1,62 +1,135 @@
 {% extends "base.html.twig" %}
 
 {% block title %}{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/product.show.css">
+{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row">
-        <div class="col-lg">
-            <div class="card border-success mb-3" style="max-width: 20rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            {% for image in product.images %}
-                                <li data-target="#carouselExampleIndicators" data-slide-to="{{ loop.index0 }}" 
-                                {% if loop.first %} class="active" {% endif %}></li>
-                            {% endfor %}
-                        </ol>
-                        <div class="carousel-inner">
-                            {% for image in product.images %}
-                                <div class="carousel-item {% if loop.first %} active {% endif %}">
-                                    <img class="d-block w-100" src="{{ image.link }}" alt="First slide">
-                                    <div class="carousel-caption d-none d-md-block">
-                                        <h5>{{ product.title }}</h5>
-                                        <p>{{ image.description }}</p>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg">
+                <div class="card my-3">
+                    <div class="card-header-bg {% include "/product/_theme.html.twig" %}">
+                        <h3 class="card-header">{{ product.name }} - {{ product.title }}</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg">
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    {% for image in product.images %}
+                                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ loop.index0 }}" 
+                                        {% if loop.first %} class="active" {% endif %}></li>
+                                    {% endfor %}
+                                </ol>
+                                <div class="carousel-inner">
+                                    {% for image in product.images %}
+                                        <div class="carousel-item {% if loop.first %} active {% endif %}">
+                                            <img class="d-block w-100" src="{{ image.link }}" alt="First slide">
+                                            <div class="carousel-caption d-none d-md-block">
+                                                <h5>{{ product.title }}</h5>
+                                                <p>{{ image.description }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-tag fa-lg"></i>
+                                    <h4>{{ product.price }} &euro; l'unité HT</h4>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <i class="fas fa-shipping-fast fa-lg"></i>
+                                    <h4>Livraison : {{ product.shippingCost }} &euro;</h4>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.title }}</h5>
+                                <span>
+                                    <span class="badge badge-warning">{{ product.productCondition.state }}</span>
+                                    <span class="badge badge-danger">{{ product.stock }} en vente</span>
+                                </span>
+                            </div>
+
+                            <div class="card-body py-0">
+                                <p class="card-text">A propos du produit : {{ product.details }}</p>
+                            </div>
+                            <br>
+                            <div class="card-body text-center">
+                                <a href="#" class="btn btn-success btn-lg mr-3 p-3">
+                                    <i class="fab fa-paypal"></i>
+                                    Acheter
+                                </a>
+                                <a href="#" class="btn btn-primary btn-lg p-3">
+                                    <i class="fas fa-shopping-basket"></i>
+                                    Ajouter au panier</a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>  
+        </div>
+
+        <div class="row">
+            <div class="col-lg-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>{{ product.user.nickname }} </h4>
+                        <p>Vendeur iBay depuis le : {{ product.user.createdAt | date('d/m/Y') }}</p>
+                        <p>Note globale : </p>
+                        <a href="" class="btn btn-warning btn-lg mb-2">Poser une question au vendeur</a>
+                        <a href="" class="btn btn-info btn-lg">Consulter le profile de {{ product.user.nickname }}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Avis clients</h4>
+                        <div class="list-group">
+                            {% if product.reviews | length < 1 %}
+                                <em>Ce produit n'as pas encore été évalué</em>
+                            {% endif %}
+                            {% for review in product.reviews %}
+                                <div class="list-group-item flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">
+                                        {% include "/product/_smiley.html.twig" %}
+                                        {{ review.user.firstName }} {{ review.user.lastName }} - 
+                                        {% for i in 1..5 %}
+                                            {% if i <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </h5>
+                                    <small class="text-muted">{{ review.createdAt | date('d/m/Y') }}</small>
                                     </div>
+                                    <p class="mb-1">{{ review.comment }}</p>
                                 </div>
                             {% endfor %}
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-               </div>
+                </div>
             </div>
         </div>
-        <div class="col-lg">
-            <div class="card border-success mb-3" style="max-width: 20rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h4 class="card-title">Success card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-               </div>
-            </div>
-            <div class="card border-success mb-3" style="max-width: 20rem;">
-                <div class="card-header">Header</div>
-                <div class="card-body">
-                    <h4 class="card-title">Success card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-               </div>
-            </div>
-        </div>
+        
+
     </div>
-</div>
     
         
 {% endblock %}
+

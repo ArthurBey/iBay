@@ -3,10 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Form\ProductType;
+use App\Repository\ImageRepository;
 use App\Service\Pagination;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ProductController extends AbstractController
@@ -36,8 +41,9 @@ class ProductController extends AbstractController
 
     /**
      * Affiche la page d'un produit en vente
+     * slug et id parceque le slug seul induit que les titres annonces doivent etres uniques
      * 
-     * @Route("/products/{category}/show/{slug}", name="product_show")
+     * @Route("/products/{category<\d+>}/show/{slug}/{id<\d+>}", name="product_show")
      *
      * @param string $slug
      * @return Response
@@ -46,6 +52,95 @@ class ProductController extends AbstractController
     {
         return $this->render('product/show.html.twig', [
             'product' => $product
+        ]);
+    }
+    
+    /**
+     * Créer et gère le formulaire de publication de produit
+     * 
+     * @Route("/product/publish/", name="product_publish")
+     * @IsGranted("ROLE_USER")
+     *
+     * @return Response
+     */
+    public function publish(Request $request, EntityManagerInterface $manager) 
+    {
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            
+            foreach($product->getImages() as $image){
+                $image->setProduct($product);
+                $manager->persist($image);
+            }
+            
+            $product->setCreatedAt(new \DateTime())
+                    ->setAvailable(true)
+                    ->setUser($user);
+
+            $manager->persist($product);
+            $manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Votre annonce a bien été publiée !"
+            );
+
+            return $this->redirectToRoute('product_show', [
+                'category' => $product->getCategory()->getId(), 
+                'slug' => $product->getSlug()
+            ]);
+        }
+        
+        return $this->render('product/publish.html.twig', [
+            'productForm' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Créer et gère le formulaire d'édition du produit
+     * 
+     * @Route("/product/edit/{slug}/{id<\d+>}", name="product_edit")
+     * @Security("is_granted('ROLE_USER') and user === product.getUser()")
+     *
+     * @return Response
+     */
+    public function edit(Product $product, Request $request, EntityManagerInterface $manager) 
+    {
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            
+            foreach($product->getImages() as $image){
+                $image->setProduct($product);
+                $manager->persist($image);
+            }
+            
+            $product->setCreatedAt(new \DateTime())
+                    ->setAvailable(true)
+                    ->setUser($user);
+
+            $manager->persist($product);
+            $manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Votre annonce a bien été éditée !"
+            );
+
+            return $this->redirectToRoute('product_show', [
+                'category' => $product->getCategory()->getId(), 
+                'slug' => $product->getSlug()
+            ]);
+        }
+        
+        return $this->render('product/publish.html.twig', [
+            'productForm' => $form->createView()
         ]);
     }
 }

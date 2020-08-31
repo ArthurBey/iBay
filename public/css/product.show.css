@@ -1,0 +1,19 @@
+.card, .alert {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.btn-lg {
+    border-radius: 15px;
+}
+
+.card-header {
+    color: white;
+}
+
+.card-header-bg {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+

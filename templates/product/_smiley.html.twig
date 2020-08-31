@@ -1,0 +1,7 @@
+{% if review.rating > 3 %}
+    <i class="far fa-smile fa-lg"></i>
+{% elseif review.rating == 3 %}
+    <i class="far fa-meh fa-lg"></i>
+{% else %}
+    <i class="far fa-frown fa-lg"></i>
+{% endif %}

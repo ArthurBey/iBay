@@ -30,49 +30,6 @@ h3 > a.card-link {
     color: white;
 }
 
-i.fa-star {
-    color: goldenrod;
-}
-
-.cat0 {
-    background: firebrick;
-}
-
-.cat1 {
-    background: darkCyan;
-}
-.cat2 {
-    background: aqua;
-}
-
-.cat3 {
-    background: blueviolet;
-}
-
-.cat4 {
-    background: blue;
-}
-
-.cat5 {
-    background: darkgreen;
-}
-
-.cat6 {
-    background: goldenrod;
-}
-
-.cat7 {
-    background: deepskyblue;
-}
-
-.cat8 {
-    background: mediumspringgreen;
-}
-
-.cat9 {
-    background: tomato;
-}
-
 @media only screen and (max-width: 990px) {
     .container {
         max-width: 100%;

@@ -2,3 +2,50 @@ body {
     background: rgb(236, 236, 236);
 }
 
+i.fa-star {
+    color: goldenrod;
+}
+
+img.profile-picture {
+    border-radius: 50%;
+    max-width: 70px;
+}
+
+.cat0 {
+    background: firebrick;
+}
+
+.cat1 {
+    background: darkCyan;
+}
+.cat2 {
+    background: aqua;
+}
+
+.cat3 {
+    background: blueviolet;
+}
+
+.cat4 {
+    background: blue;
+}
+
+.cat5 {
+    background: darkgreen;
+}
+
+.cat6 {
+    background: goldenrod;
+}
+
+.cat7 {
+    background: deepskyblue;
+}
+
+.cat8 {
+    background: mediumspringgreen;
+}
+
+.cat9 {
+    background: tomato;
+}

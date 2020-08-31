@@ -1,0 +1,70 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/product.show.css">
+{% endblock %}
+
+{# {% form_theme form _self %} Spécifie un thème, dans ce fichier (self) (suite au DRY on le fait plus dans ce fichier) #}
+{% form_theme productForm 'product/_imagesForm.html.twig' %}
+
+<div class="container">
+    {{ form_start(productForm) }}
+    <div class="alert alert-info text-center mt-3"> 
+            <h2 class="alert-heading">
+                <i class="far fa-edit"></i>
+                Création d'une annonce
+            </h2>
+    </div>
+    <div class="row">
+        <div class="col-lg">
+            <div class="card my-3 h-100">
+                <div class="card-header-bg bg-info">
+                    <h3 class="h5 card-header">Déscription du produit</h3>
+
+                </div>
+                <div class="card-body">
+                    
+                    {{ form_row(productForm.category) }} 
+                    {{ form_row(productForm.name) }}
+                    {{ form_row(productForm.productCondition) }} 
+                    {{ form_row(productForm.title) }}
+                    {{ form_row(productForm.details) }}
+                    {{ form_row(productForm.stock) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg">
+            <div class="card my-3 h-100">
+                <div class="card-header-bg bg-info">
+                    <h3 class="h5 card-header">Tarifs et images</h3>
+                </div>
+                <div class="card-body">
+                    {{ form_row(productForm.price) }}
+                    {{ form_row(productForm.shippingCost) }} 
+                    {{ form_row(productForm.coverUrl) }}
+                    {{ form_row(productForm.images) }}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card mt-5 w-100">
+            <div class="card-body text-center">
+                <p>Vérifiez les informations que vous avez saisi avant de confirmer la publication de votre annonce !</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia cupiditate debitis impedit nemo odio sed itaque magni minus totam eaque!</p>
+                <button type="submit" class="btn btn-success">Publier l'annonce !</button>
+                {{ form_end(productForm) }}
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+{% endblock %} 
+
+{% block javascripts %}
+    <script src="/js/publish.js"></script>
+{% endblock %}
