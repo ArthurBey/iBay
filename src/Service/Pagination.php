@@ -68,7 +68,21 @@ class Pagination {
      *
      * @var array
      */
-    private $findByCategory;
+    private $findBySettings;
+
+    /**
+     * L'id du profile de l'utilisateur
+     *
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * Le slug du profile de l'utilisteur
+     *
+     * @var string
+     */
+    private $slug;
 
     /**
      * Constructeur du service de pagination qui sera appelé par Symfony
@@ -81,13 +95,13 @@ class Pagination {
      * @param RequestStack $request
      * @param string $templatePath
      */
-    public function __construct(EntityManagerInterface $manager, Environment $twig, RequestStack $request, string $templatePath) {
+    public function __construct(EntityManagerInterface $manager, Environment $twig, RequestStack $request) {
         // On récupère le nom de la route à utiliser à partir des attributs de la requête actuelle
         $this->route        = $request->getCurrentRequest()->attributes->get('_route');        
         // Autres initialisations
         $this->manager      = $manager;
         $this->twig         = $twig;
-        $this->templatePath = $templatePath;
+        //$this->templatePath = $templatePath; Utile lordque défini dans services.yaml 
     }
 
     /**
@@ -105,13 +119,24 @@ class Pagination {
      * @return void
      */
     public function display() {
-        $category = $this->getFindByCategory();
-        $this->twig->display($this->templatePath, [
+        $category = $this->getFindBySettings();
+        if(array_key_exists("category", $category)){
+            $this->twig->display($this->templatePath, [
+                'page' => $this->currentPage,
+                'pages' => $this->getPages(),
+                'route' => $this->route,
+                'category' => $category['category']
+            ]);
+        } else {
+            $this->twig->display($this->templatePath, [
             'page' => $this->currentPage,
             'pages' => $this->getPages(),
             'route' => $this->route,
-            'category' => $category['category']
+            'slug' => $this->slug,
+            'id' => $this->id
         ]);
+        }
+        
     }
 
     /**
@@ -135,7 +160,7 @@ class Pagination {
         // 1) Connaitre le total des enregistrements de la table
         $total = count($this->manager
                         ->getRepository($this->entityClass)
-                        ->findBy($this->findByCategory));
+                        ->findBy($this->findBySettings));
 
         // 2) Faire la division, l'arrondi et le renvoyer
         return ceil($total / $this->limit);
@@ -163,7 +188,7 @@ class Pagination {
         // dans la limite d'éléments imposée (voir propriété $limit)
         return $this->manager
                         ->getRepository($this->entityClass)
-                        ->findBy($this->findByCategory, [], $this->limit, $offset);
+                        ->findBy($this->findBySettings, [], $this->limit, $offset);
     }
 
     /**
@@ -279,21 +304,61 @@ class Pagination {
      *
      * @return  array
      */ 
-    public function getFindByCategory()
+    public function getFindBySettings()
     {
-        return $this->findByCategory;
+        return $this->findBySettings;
     }
 
     /**
      * Set le tableau d'options précisant la recherche de la méthode findBy
      *
-     * @param  array  $findByCategory  Le tableau d'options précisant la recherche de la méthode findBy
+     * @param  array  $findBySettings  Le tableau d'options précisant la recherche de la méthode findBy
      *
      * @return  self
      */ 
-    public function setFindByCategory(array $findByCategory)
+    public function setFindBySettings(array $findBySettings)
     {
-        $this->findByCategory = $findByCategory;
+        $this->findBySettings = $findBySettings;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id
+     */ 
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of slug
+     */ 
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * Set the value of slug
+     *
+     * @return  self
+     */ 
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
 
         return $this;
     }

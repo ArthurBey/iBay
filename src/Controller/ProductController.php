@@ -23,8 +23,9 @@ class ProductController extends AbstractController
      */
     public function index($page, $category, Pagination $pagination) // page = 1 plus nécessaire grace à la inlined requirement en annotation "?1" 
     {
-        $findByCategory = [
-            "category" => $category
+        $findBySettings = [
+            "category" => $category,
+            "available" => true 
         ];
         // RAPPEL : cf services.yaml
         // On indique juste l'entité et la page actuelle
@@ -32,7 +33,8 @@ class ProductController extends AbstractController
                    ->setRoute('products_index') // on indique la route des liens cliquables de pagination
                    ->setLimit(8) // 8 au lieu du default de 10
                    ->setPage($page)
-                   ->setFindByCategory($findByCategory);
+                   ->setFindBySettings($findBySettings)
+                   ->setTemplatePath("/product/pagination.html.twig");
 
         return $this->render('product/index.html.twig', [
             'pagination' => $pagination // On laisse twig extraire les infos

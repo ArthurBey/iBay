@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use App\Entity\Product;
+use App\Service\Pagination;
+use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AccountController extends AbstractController
@@ -36,4 +40,38 @@ class AccountController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    /**
+     * Permet d'afficher les détails publiques du compte d'un utilisateur
+     * 
+     * @Route("/account/{page<\d+>?1}/{slug}/{id}", name="account_public")
+     *
+     * @param User $user
+     * @return Response
+     */
+    public function show(User $user, ProductRepository $productRepo, $id, $slug, Pagination $pagination, $page)
+    {
+        $findBySettings = [
+            "user" => $id,
+            "available" => true 
+        ];
+        // RAPPEL : cf services.yaml
+        // On indique juste l'entité et la page actuelle
+
+        $pagination->setEntityClass(Product::class)
+                   ->setRoute('account_public') // on indique la route des liens cliquables de pagination
+                   ->setLimit(8) // 8 au lieu du default de 10
+                   ->setPage($page)
+                   ->setFindBySettings($findBySettings)
+                   ->setTemplatePath("/account/pagination.html.twig")
+                   ->setId($id)
+                   ->setSlug($slug);
+
+        return $this->render('account/show.html.twig', [
+            'user' => $user,
+            'userRating' => $user->getAverageRating($productRepo->findBy(['user' => $id])),
+            'pagination' => $pagination
+        ]);
+    }
+
 }

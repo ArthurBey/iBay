@@ -1,0 +1,124 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Profile de {{ user.nickname }}{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/account.css">
+<link rel="stylesheet" href="/css/product.index.css">
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg">
+            <div class="card profile-card-2 w-100">
+                <div class="card-img-block">
+                    <img src="https://picsum.photos/1303/600/" alt="photo de couverture" class="img-fluid">
+                </div>
+                <div class="card-body pt-5">
+                    <img src="{{ user.profilePicture }}" alt="" class="profile"/>
+                    <div class="row">
+                        <h5 class="card-title m-3">{{ user.nickname }}</h5>
+                        <div>
+                            <span class="badge badge-success ml-3 my-3">Membre depuis {{ user.getMembershipTimeInDays }} jours</span>
+                            {% if userRating > 0 %}
+                                <span class="badge badge-primary m-3">Note vendeur : 
+                                
+                                    {% for i in 1..5 %}
+                                        {% if i <= userRating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </span>
+                            {% endif %}
+                            <a href="" class="btn btn-warning btn-lg mb-2 ml-2">Poser une question
+                              <i class="far fa-envelope fa-lg"></i>
+                            </a>
+                    </div>
+                    <p class="card-text mx-3">{{ user.description }}</p>
+                </div>
+                <br>
+                <h4>Les articles vendus par {{ user.nickname }}</h4>
+                <!-- -->
+                <div class="row my-4">
+                    {% for product in pagination.data %}
+                    <div class="col-lg-3">
+                      <div class="card mb-3 my-3">
+                            <div class="card-header-bg {% include "/product/_theme.html.twig" %}"> 
+                              <h3 class="card-header"><a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug, 'id': product.id}) }}" class="card-link">{{ product.name }}</a></h3>
+                            </div>
+                            <div class="card-body">
+                              <h5 class="card-title">Vendu par <a href="" class="card-link">{{ product.user.nickname }}</a></h5>
+                              <h6 class="card-subtitle text-muted">dans la catégorie {{ product.category.title }}</h6>
+                            </div>
+                                <a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug, 'id': product.id}) }}"><img class="card-img" src="{{ product.coverUrl }}" alt="Card image"></a>
+                            <div class="card-body">
+                              <p class="card-text">{{ product.title }}</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                              <li class="list-group-item">Prix unitaire : <strong>{{ product.price }} &euro;</strong></li>
+                              <li class="list-group-item">
+                                  {% if product.averageRating == 0 %}
+                                      <em class="text-secondary">Non noté</em>
+                                      <i class="fas fa-comment-slash text-secondary"></i>
+                                  {% else %}
+                                      {% for i in 1..5 %}
+                                          {% if i <= product.averageRating %}
+                                            <i class="fas fa-star"></i>
+                                          {% else %}
+                                            <i class="far fa-star"></i>
+                                          {% endif %}
+                                          
+                                      {% endfor %}
+                                      <em>({{ product.reviews | length() }} notes)</em>
+                                  {% endif %}
+                              </li> 
+                              <li class="list-group-item">
+                                <span class="badge badge-warning">{{ product.productCondition.state }}</span>
+                                <span class="badge badge-danger">{{ product.stock }} en vente</span>
+                              </li>
+                            </ul>
+                            <div class="card-body">
+                              <a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug, 'id': product.id}) }}" class="card-link">
+                                Détails
+                                <i class="fas fa-search-plus"></i>
+                              </a>
+                              <a href="#" class="card-link">
+                                Acheter
+                                <i class="fas fa-shopping-cart"></i>
+                              </a>
+                            </div>
+                            <div class="card-footer text-muted">
+                              Publié le {{ product.createdAt | date("d/m/Y") }}
+                            </div>
+                          </div>
+                    </div>
+                    {% endfor %} 
+                
+                
+                </div>
+                <div class="m-auto">
+                  {{ pagination.display() }}
+                </div>
+                <!-- -->
+            </div>
+        </div>
+    </div>
+  
+  
+</div>
+
+{% endblock %}
+
+
+    {# user.username }}
+    {{ user.firstName }}
+    {{ user.nickname }}
+    {{ user.createdAt | date("d/m/Y") }}
+    {{ user.description }}
+    {# rating de l'user sur les annonces active/inactives #}
+    {# nb d'annonces actives #}
+    {# Badge 'vendeur' / 'vendeur expérimenté' / 'super-vendeur' #}
+    {# toutes ses annonces dispo de la plus anciennes à la plus récente #}

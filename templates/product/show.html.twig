@@ -90,8 +90,12 @@
                         <h4>{{ product.user.nickname }} </h4>
                         <p>Vendeur iBay depuis le : {{ product.user.createdAt | date('d/m/Y') }}</p>
                         <p>Note globale : </p>
-                        <a href="" class="btn btn-warning btn-lg mb-2">Poser une question au vendeur</a>
-                        <a href="" class="btn btn-info btn-lg">Consulter le profile de {{ product.user.nickname }}</a>
+                        <a href="" class="btn btn-warning btn-lg mb-2">Poser une question au vendeur
+                            <i class="far fa-envelope fa-lg"></i>
+                        </a>
+                        <a href="{{ path('account_public', {'slug': product.user.slug, 'id': product.user.id }) }}" class="btn btn-info btn-lg">Consulter le profile de {{ product.user.nickname }}
+                            <i class="far fa-user-circle fa-lg"></i>
+                        </a>
                     </div>
                 </div>
             </div>
