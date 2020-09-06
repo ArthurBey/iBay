@@ -23,7 +23,6 @@
                             <span class="badge badge-success ml-3 my-3">Membre depuis {{ user.getMembershipTimeInDays }} jours</span>
                             {% if userRating > 0 %}
                                 <span class="badge badge-primary m-3">Note vendeur : 
-                                
                                     {% for i in 1..5 %}
                                         {% if i <= userRating %}
                                             <i class="fas fa-star"></i>
@@ -33,14 +32,18 @@
                                     {% endfor %}
                                     </span>
                             {% endif %}
-                            <a href="" class="btn btn-warning btn-lg mb-2 ml-2">Poser une question
-                              <i class="far fa-envelope fa-lg"></i>
+                            <a href="" class="btn btn-warning btn-lg mb-2 ml-2">
+                                <i class="far fa-envelope fa-lg"></i>
+                                Poser une question
                             </a>
                     </div>
                     <p class="card-text mx-3">{{ user.description }}</p>
                 </div>
                 <br>
                 <h4>Les articles vendus par {{ user.nickname }}</h4>
+                {% if pagination.data | length() < 1 %}
+                    <em class="text-secondary">Aucun article en vente pour le moment</em>
+                {% else %}
                 <!-- -->
                 <div class="row my-4">
                     {% for product in pagination.data %}
@@ -96,13 +99,14 @@
                           </div>
                     </div>
                     {% endfor %} 
-                
-                
                 </div>
                 <div class="m-auto">
                   {{ pagination.display() }}
                 </div>
                 <!-- -->
+                {% endif %}
+                
+                
             </div>
         </div>
     </div>

@@ -27,7 +27,7 @@ class RegistrationFormType extends AbstractType
                 "label" => "Prénom",
                 "attr" => ['placeholder' => "Votre prénom"]
             ])
-            ->add('username', TextType::class, [
+            ->add('nickname', TextType::class, [
                 "label" => "Nom d'utilisateur",
                 "attr" => ['placeholder' => "Votre nom d'utilisateur"]
             ])
@@ -53,7 +53,8 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('profilePicture', UrlType::class, [
                 "label" => "Votre photo de profile (falcultatif)",
-                "attr" => ['placeholder' => "Lien URL de votre photo de profile"]
+                "attr" => ['placeholder' => "Lien URL de votre photo de profile"],
+                "required" => false
                 ])
             ->add('description', TextareaType::class, [
                 "label" => "Description de votre profil",

@@ -8,6 +8,7 @@ use App\Service\Pagination;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -15,6 +16,7 @@ class AccountController extends AbstractController
 {
     /**
      * @Route("/login", name="account_login")
+     * @IsGranted("IS_ANONYMOUS")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

@@ -15,7 +15,7 @@
                   <h3 class="card-header"><a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug, 'id': product.id}) }}" class="card-link">{{ product.name }}</a></h3>
                 </div>
                 <div class="card-body">
-                  <h5 class="card-title">Vendu par <a href="" class="card-link">{{ product.user.nickname }}</a></h5>
+                  <h5 class="card-title">Vendu par <a href="{{ path('account_public', {'slug': product.user.slug, 'id': product.user.id }) }}" class="card-link">{{ product.user.nickname }}</a></h5>
                   <h6 class="card-subtitle text-muted">dans la catégorie {{ product.category.title }}</h6>
                 </div>
                     <a href="{{ path('product_show', {'category': product.category.id, 'slug': product.slug, 'id': product.id}) }}"><img class="card-img" src="{{ product.coverUrl }}" alt="Card image"></a>
@@ -50,9 +50,14 @@
                     Détails
                     <i class="fas fa-search-plus"></i>
                   </a>
-                  <a href="#" class="card-link">
-                    Acheter
+                  <a href="{{ path('basket_add', {'id': product.id}) }}" class="card-link">
+                    Ajouter au panier
                     <i class="fas fa-shopping-cart"></i>
+                  </a>
+                  <a href="" class="btn btn-info w-100 mt-3">
+                      <i class="fab fa-paypal fa-lg"></i>
+                      <strong>Acheter !</strong>
+                    
                   </a>
                 </div>
                 <div class="card-footer text-muted">

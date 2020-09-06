@@ -25,7 +25,7 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success">Se connecter</button>
-                        <a href="" class="btn btn-info">Page d'inscription</a>
+                        <a href="{{ path('registration') }}" class="btn btn-info">Page d'inscription</a>
                     </div>
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 </form>

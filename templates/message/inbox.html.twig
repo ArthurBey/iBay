@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boîte de réception{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="/css/inbox.css">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Questions reçues</th>
+                <th>Envoyé par</th>
+                <th>Reçu le</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for thread in threads %}
+                <tr>
+                    <td class="my-0 p-0 ">
+                        <a href="" class="btn btn-primary">
+                            <i class="far fa-envelope"></i>
+                        {{ thread.title }}</a>
+                    </td>
+                    <td class="my-0 p-0">{{ thread.sender.nickname }}</td>
+                    <td class="my-0 p-0">{{ thread.createdAt | date("d/m/Y à h:m") }}</td>
+                </tr>   
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+a.btn.btn-primary {
+    color: black;
+    background-color: white;
+    border: none;
+    border-radius: 1px;
+    width: 100%;
+}
+
+a.btn.btn-primary:hover {
+    background-color: lightsteelblue;
+}
+
+td {
+    background: white;
+}
