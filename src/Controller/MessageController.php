@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Message;
 use App\Repository\MessageRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -18,7 +19,7 @@ class MessageController extends AbstractController
     {
         $receivedThreads = $messageRepo->findBy([
             "receiver" => $this->getUser(),
-            "thread" => null
+            "thread"   => null
         ]);
         //$lastMessage = $messageRepo;
 
@@ -37,6 +38,24 @@ class MessageController extends AbstractController
         $sentThreads = $messageRepo->getSentThreads($user); // méthode custom 
         return $this->render('message/outbox.html.twig', [
             'threads' => $sentThreads
+        ]);
+    }
+
+    /**
+     * @Route("/messages/show/{id}", name="messages_show")
+     * @IsGranted("ROLE_USER")
+     */
+    public function show(Message $message, MessageRepository $messageRepo)
+    {
+        $threadMessages = $messageRepo->findBy([
+            "thread" => $message->getId()
+        ]);
+
+        //dd($threadMessages);
+
+        return $this->render('message/show.html.twig', [
+            'threadQuestion' => $message,
+            'threadMessages' => $threadMessages
         ]);
     }
 

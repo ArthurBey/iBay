@@ -8,27 +8,45 @@
 {% block body %}
 <div class="container">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Questions reçues</th>
-                <th>Envoyé par</th>
-                <th>Reçu le</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for thread in threads %}
-                <tr>
-                    <td class="my-0 p-0 ">
-                        <a href="" class="btn btn-primary">
-                            <i class="far fa-envelope"></i>
-                        {{ thread.title }}</a>
-                    </td>
-                    <td class="my-0 p-0">{{ thread.sender.nickname }}</td>
-                    <td class="my-0 p-0">{{ thread.createdAt | date("d/m/Y à h:m") }}</td>
-                </tr>   
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="card mt-3">
+        <div class="card-header-bg">
+            <div class="card-header">
+                <h5>
+                    <i class="far fa-envelope fa-lg"></i>
+                    Boîte de réception
+                </h5>
+                
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Questions reçues</th>
+                        <th>Envoyé par</th>
+                        <th>Reçu le</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for thread in threads %}
+                        <tr>
+                            <td class="my-0 p-0 ">
+                                <a href="{{ path('messages_show', {'id': thread.id}) }}" class="btn btn-primary text-left">
+                                    <i class="far fa-envelope"></i>
+                                {{ thread.title }}</a>
+                            </td>
+                            <td class="my-0 p-0">{{ thread.sender.nickname }}</td>
+                            <td class="my-0 p-0">{{ thread.createdAt | date("d/m/Y à h:m") }}</td>
+                        </tr>   
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <a href="{{ path('messages_outbox') }}" class="btn btn-warning m-3">
+                Aller à la boîte d'envoie
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}

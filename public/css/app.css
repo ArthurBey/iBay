@@ -2,6 +2,10 @@ body {
     background: rgb(236, 236, 236);
 }
 
+.navbar {
+    height: 80px;
+}
+
 i.fa-star {
     color: goldenrod;
 }
@@ -9,6 +13,13 @@ i.fa-star {
 img.profile-picture {
     border-radius: 50%;
     max-width: 70px;
+}
+
+.small-photo {
+    max-width: 30px;
+    max-height: 30px;
+    border-radius: 50%;
+    
 }
 
 .cat0 {

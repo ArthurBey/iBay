@@ -8,37 +8,55 @@
 
   <div class="collapse navbar-collapse" id="navbarColor03">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ path('products_index', {'category': '2', 'page': '1'}) }}"><i class="fas fa-car"></i> Automobile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
+        <a class="nav-link" href="{{ path('products_index', {'category': '7', 'page': '1'}) }}"><i class="fas fa-tools"></i> Bricolage</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
+      <li><a class="nav-link" href="{{ path('products_index', {'category': '9', 'page': '1'}) }}"><i class="fab fa-playstation"></i> Consoles</a></li>
+      <li><a class="nav-link" href="{{ path('products_index', {'category': '4', 'page': '1'}) }}"><i class="fas fa-tv"></i> Informatique</a></li>
+      <li><a class="nav-link" href="{{ path('products_index', {'category': '8', 'page': '1'}) }}"><i class="fas fa-gamepad"></i> Jeux-videos</a></li>
+      <li><a class="nav-link" href="{{ path('products_index', {'category': '5', 'page': '1'}) }}"><i class="fas fa-couch"></i> Meubles</a></li>
+      <li><a class="nav-link" href="{{ path('products_index', {'category': '10', 'page': '1'}) }}"><i class="fas fa-futbol"></i> Sport</a></li>
+      <li><a class="nav-link" href="{{ path('products_index', {'category': '3', 'page': '1'}) }}"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
+      <li><a class="nav-link" href="{{ path('products_index', {'category': '1', 'page': '1'}) }}"><i class="fas fa-tshirt"></i> Vêtements</a></li>
+      <!--
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Catégories</a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '2', 'page': '1'}) }}">Automobile</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '7', 'page': '1'}) }}">Bricolage</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '9', 'page': '1'}) }}">Consoles</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '4', 'page': '1'}) }}">Informatique</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '8', 'page': '1'}) }}">Jeux-videos</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '5', 'page': '1'}) }}">Meubles</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '10', 'page': '1'}) }}">Sport</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '3', 'page': '1'}) }}">Smartphones</a>
-          <a class="dropdown-item" href="{{ path('products_index', {'category': '1', 'page': '1'}) }}">Vêtements</a>
+          <a class="nav-link" href="{{ path('products_index', {'category': '2', 'page': '1'}) }}">Automobile</a>
+          <a class="nav-link" href="{{ path('products_index', {'category': '7', 'page': '1'}) }}">Bricolage</a>
         </div>
       </li>
+      -->
+
+      <ul class="navbar-nav ml-auto">
+            {% if app.user %}
+                <li class="nav_item dropdown"> {# liste déroulante pour user connecté #}
+                    <a href="" class="nav-link dropdown-toggle" id="accountDropdownLink" data-toggle="dropdown"> {# lien pour ouvrir la liste déroulante #}
+                        <img src="{{ app.user.profilePicture }}" class="avatar small-photo" alt="avatar de {{ app.user.nickname }}"> {# Rappel : app.user.ProprieteDeUser #}
+                        {{app.user.nickname}}
+                    </a> 
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountDropdownLink"> {# On spécifie ici le dropdown : dropdown-menu-right -> menu s'ouvre en étant à droite #}
+                        <a href="{{ path('account_public', {'slug': app.user.slug, 'id': app.user.id }) }}}" class="dropdown-item">Mon compte</a>
+                        <a href="{{ path('product_publish') }}" class="dropdown-item">Vendre un produit</a>
+                        <a href="{{ path('messages_inbox') }}" class="dropdown-item">Mes messages</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ path('account_logout') }}" class="dropdown-item">Déconnexion</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a href="{{ path('registration') }}" class="nav-link">Inscription</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('account_login') }}" class="nav-link">Connexion</a>
+                </li>
+            {% endif %}
+        </ul>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>
 

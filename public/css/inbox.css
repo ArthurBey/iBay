@@ -7,9 +7,29 @@ a.btn.btn-primary {
 }
 
 a.btn.btn-primary:hover {
-    background-color: lightsteelblue;
+    color: orange;
 }
 
 td {
     background: white;
+}
+
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    color: white;
+}
+
+.card-body {
+    padding: 0px;
+}
+
+.card-header-bg {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-color: orange;
 }
